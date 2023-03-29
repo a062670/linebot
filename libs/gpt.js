@@ -14,7 +14,9 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-getGptResponse("Hello, world!");
+// (async function () {
+//   console.log(await getGptResponse("gpt hello"));
+// })();
 
 export async function getGptResponse(prompt) {
   try {
