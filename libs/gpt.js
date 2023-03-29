@@ -30,7 +30,7 @@ export async function getGptResponse(prompt) {
     const req = {
       model: "gpt-3.5-turbo",
       messages: message,
-      max_tokens: 100,
+      max_tokens: 1000,
       temperature: 0.7,
       top_p: 1,
       frequency_penalty: 0,
