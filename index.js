@@ -1,6 +1,8 @@
-const express = require("express");
-const line = require("@line/bot-sdk");
-const fs = require("fs");
+import express from "express";
+import line from "@line/bot-sdk";
+import fs from "fs";
+
+import gpt from "./libs/gpt.js";
 
 const config = JSON.parse(fs.readFileSync("config.json", "utf8"));
 
@@ -14,17 +16,21 @@ app.post("/webhook", line.middleware(config), (req, res) => {
   );
 });
 
-function handleEvent(event) {
+async function handleEvent(event) {
   if (event.type !== "message" || event.message.type !== "text") {
-    return Promise.resolve(null);
+    return null;
   }
 
-  const message = {
-    type: "text",
-    text: "Hello, world!",
-  };
+  if (event.message.text.toLowerCase().startsWith("gpt")) {
+    const message = {
+      type: "text",
+      text: await gpt.getGptResponse(event.message.text),
+    };
 
-  return client.replyMessage(event.replyToken, message);
+    return client.replyMessage(event.replyToken, message);
+  }
+
+  return null;
 }
 
 app.listen(80);
