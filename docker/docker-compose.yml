@@ -1,0 +1,16 @@
+version: '3'
+
+networks:
+  nginxproxy:
+    external: true
+
+services:
+
+  linebot:
+    image: linebot
+    container_name: linebot
+    restart: always
+    logging:
+      driver: gcplogs
+    networks:
+      - nginxproxy
