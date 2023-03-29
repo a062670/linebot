@@ -15,15 +15,22 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 // (async function () {
-//   console.log(await getGptResponse("gpt hello"));
+//   console.log(await getGptResponse("給我一段隨機的 js 程式碼片段"));
 // })();
 
 export async function getGptResponse(prompt) {
   try {
-    const completion = await openai.createCompletion({
+    const req = {
       model: "text-davinci-003",
       prompt: prompt,
-    });
+      max_tokens: 1000,
+    };
+    // const req = {
+    //   model: "gpt-3.5-turbo",
+    //   messages: [{ role: "user", content: prompt }],
+    //   temperature: 0.7,
+    // };
+    const completion = await openai.createCompletion(req);
     return completion.data.choices[0].text;
   } catch (error) {
     if (error.response) {
