@@ -22,9 +22,10 @@ async function handleEvent(event) {
   }
 
   if (event.message.text.toLowerCase().startsWith("gpt ")) {
+    const resp = await gpt.getGptResponse(event.message.text.substring(4));
     const message = {
       type: "text",
-      text: await gpt.getGptResponse(event.message.text.substring(4)),
+      text: resp.trim(),
     };
 
     return client.replyMessage(event.replyToken, message);
