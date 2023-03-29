@@ -14,24 +14,37 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
+let message = [];
+
 // (async function () {
 //   console.log(await getGptResponse("給我一段隨機的 js 程式碼片段"));
 // })();
 
 export async function getGptResponse(prompt) {
+  if (prompt.toLowerCase() === "new") {
+    message = [];
+    return "建立新的聊天串";
+  }
   try {
+    message.push({ role: "user", content: prompt });
     const req = {
-      model: "text-davinci-003",
-      prompt: prompt,
-      max_tokens: 1000,
+      model: "gpt-3.5-turbo",
+      messages: message,
+      max_tokens: 100,
+      temperature: 0.7,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
     };
-    // const req = {
-    //   model: "gpt-3.5-turbo",
-    //   messages: [{ role: "user", content: prompt }],
-    //   temperature: 0.7,
-    // };
-    const completion = await openai.createCompletion(req);
-    return completion.data.choices[0].text;
+    const completion = await openai.createChatCompletion(req);
+    const completion_text = completion.data.choices[0].message.content;
+
+    // 回復存入列表
+    message.push(completion.data.choices[0].message);
+    // 只留 6 個
+    message = message.slice(-6);
+
+    return completion_text;
   } catch (error) {
     if (error.response) {
       return `${error.response.status} ${error.response.data}`;
