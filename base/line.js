@@ -2,7 +2,7 @@ import line from "@line/bot-sdk";
 import fs from "fs";
 import path from "path";
 
-import gpt from "../libs/gpt.js";
+import Message from "./message.js";
 
 const __dirname = path.resolve();
 
@@ -31,14 +31,14 @@ class Line {
       return null;
     }
 
-    if (event.message.text.toLowerCase().startsWith("gpt ")) {
-      const resp = await gpt.getGptResponse(
-        event.message.text.substring(4),
-        `line-${event.source.userId}`
-      );
+    const userId = event.source.userId;
+    const content = event.message.text;
+    const reply = await Message.getReply(content, `discord-${userId}`);
+
+    if (reply) {
       const message = {
         type: "text",
-        text: resp.trim(),
+        text: reply,
       };
 
       return client.replyMessage(event.replyToken, message);
