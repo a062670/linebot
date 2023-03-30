@@ -47,7 +47,7 @@ export async function getGptResponse(prompt, key) {
     // 回復存入列表
     message.push(completion.data.choices[0].message);
     // 只留 6 個
-    message = message.slice(-6);
+    message.splice(0, message.length - 6);
 
     return completion_text;
   } catch (error) {
