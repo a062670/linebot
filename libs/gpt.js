@@ -24,13 +24,13 @@ export async function getGptResponse(prompt, key) {
   if (!messages[key]) {
     messages[key] = [];
   }
-  const message = messages[key];
-
   if (prompt.toLowerCase() === "new") {
-    message = [];
+    messages[key] = [];
     return "建立新的聊天串";
   }
+
   try {
+    const message = messages[key];
     message.push({ role: "user", content: prompt });
     const req = {
       model: "gpt-3.5-turbo",
