@@ -2,7 +2,7 @@ import line from "@line/bot-sdk";
 import fs from "fs";
 import path from "path";
 
-import gpt from "./libs/gpt.js";
+import gpt from "../libs/gpt.js";
 
 const __dirname = path.resolve();
 

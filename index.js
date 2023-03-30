@@ -1,5 +1,5 @@
 import express from "express";
-import Line from "./base/line";
+import Line from "./base/line.js";
 
 const app = express();
 
