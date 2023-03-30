@@ -1,4 +1,4 @@
-FROM node:16.17.0
+FROM node:18.15.0
 
 COPY /package.json /build/package.json
 COPY /package-lock.json /build/package-lock.json

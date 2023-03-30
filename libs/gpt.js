@@ -5,7 +5,7 @@ import { Configuration, OpenAIApi } from "openai";
 const __dirname = path.resolve();
 
 const config = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "configGpt.json"), "utf8")
+  fs.readFileSync(path.join(__dirname, "config", "gpt.json"), "utf8")
 );
 
 const configuration = new Configuration({
@@ -14,13 +14,18 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-let message = [];
+const messages = {};
 
 // (async function () {
-//   console.log(await getGptResponse("給我一段隨機的 js 程式碼片段"));
+//   console.log(await getGptResponse("給我一段隨機的 js 程式碼片段", "test"));
 // })();
 
-export async function getGptResponse(prompt) {
+export async function getGptResponse(prompt, key) {
+  if (!messages[key]) {
+    messages[key] = [];
+  }
+  const message = messages[key];
+
   if (prompt.toLowerCase() === "new") {
     message = [];
     return "建立新的聊天串";
