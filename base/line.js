@@ -33,7 +33,7 @@ class Line {
 
     const userId = event.source.userId;
     const content = event.message.text;
-    const reply = await Message.getReply(content, `discord-${userId}`);
+    const reply = await Message.getReply(content, `line-${userId}`);
 
     if (reply) {
       const message = {
