@@ -14,7 +14,7 @@ const api = new BingChat({
 
 const getResponse = async (message) => {
   try {
-    const res = await api.sendMessage(message);
+    const res = await api.sendMessage(message + "\n請使用正體中文回答。");
     return res.text;
   } catch (error) {
     return "錯誤(bing)";
