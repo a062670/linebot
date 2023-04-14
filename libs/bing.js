@@ -33,7 +33,7 @@ const getResponse = async (prompt, key) => {
       return "建立新的聊天串(bing)";
     }
   } catch (error) {
-    return "建立新的聊天串失敗(bing)";
+    return `建立新的聊天串失敗(bing): ${error.message}`;
   }
   try {
     const conversation = conversations[key];
@@ -191,9 +191,9 @@ const packJson = (data) => {
   return JSON.stringify(data) + "";
 };
 
-// (async function () {
-//   console.log(await getResponse("你好", "test"));
-// })();
+(async function () {
+  console.log(await getResponse("你好", "test"));
+})();
 
 export default {
   getResponse,
