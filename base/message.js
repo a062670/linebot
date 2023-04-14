@@ -7,7 +7,7 @@ const getReply = async (message, key) => {
     return resp.trim();
   }
   if (message.toLowerCase().startsWith("bing ")) {
-    const resp = await bing.getResponse(message.substring(5));
+    const resp = await bing.getResponse(message.substring(5), key);
     return resp.trim();
   }
 
