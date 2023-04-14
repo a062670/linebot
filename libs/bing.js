@@ -16,6 +16,7 @@ const axiosInstance = axios.create({
     referer: "https://www.bing.com/",
     origin: "https://www.bing.com",
     cookie: config.cookie,
+    "x-forwarded-for": "111.255.18.140",
     "user-agent":
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.50",
   },
@@ -192,7 +193,7 @@ const packJson = (data) => {
 };
 
 (async function () {
-  console.log(await getResponse("你好", "test"));
+  console.log(await getResponse("new", "test"));
 })();
 
 export default {
