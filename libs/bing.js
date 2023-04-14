@@ -192,9 +192,9 @@ const packJson = (data) => {
   return JSON.stringify(data) + "";
 };
 
-(async function () {
-  console.log(await getResponse("new", "test"));
-})();
+// (async function () {
+//   console.log(await getResponse("new", "test"));
+// })();
 
 export default {
   getResponse,
