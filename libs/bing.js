@@ -48,8 +48,8 @@ const createConversation = async () => {
   const response = await axiosInstance.get("/turing/conversation/create");
   const data = response.data;
 
-  if (data.result.value !== "Success") {
-    throw new Error("建立聊天室失敗");
+  if (data.result?.value !== "Success") {
+    throw new Error(`建立聊天室失敗: ${JSON.stringify(data)}`);
   }
 
   return {
