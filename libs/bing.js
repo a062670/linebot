@@ -76,7 +76,7 @@ const generate = async (conversation, prompt) => {
     let timeout = setTimeout(() => {
       ws.close();
       reject(new Error("Socket: Timeout 惹"));
-    }, 10 * 1000);
+    }, 30 * 1000);
 
     ws.on("error", () => {
       if (timeout) clearTimeout(timeout);
