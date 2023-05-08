@@ -145,7 +145,7 @@ const generate = async (conversation, prompt) => {
               timeout = setTimeout(() => {
                 ws.close();
                 resolve("Resolved by timeout");
-              }, 3 * 1000);
+              }, 10 * 1000);
             }
 
             break;
