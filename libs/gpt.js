@@ -33,7 +33,7 @@ export async function getGptResponse(prompt, key) {
     const message = messages[key];
     message.push({ role: "user", content: prompt });
     const req = {
-      model: "gpt-3.5-turbo",
+      model: "gpt-4",
       messages: message,
       max_tokens: 1000,
       temperature: 0.7,
