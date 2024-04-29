@@ -63,7 +63,7 @@ $ npm run test:cov
 ### 版控
 
 ```
-sudo git clone -b main --single-branch https://github.com/a062670/linebot.git /var/projects/linebot/
+sudo git clone -b master --single-branch https://github.com/a062670/linebot.git /var/projects/linebot/
 ```
 
 ### env
