@@ -6,6 +6,6 @@ import { middleware as LineMiddleware } from './modules/line/config/line-middlew
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.use('line/webhook', LineMiddleware);
-  await app.listen(3000);
+  await app.listen(80);
 }
 bootstrap();

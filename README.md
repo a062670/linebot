@@ -58,6 +58,22 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## 部屬
+
+### 版控
+
+```
+sudo git clone -b main --single-branch https://github.com/a062670/linebot.git /var/projects/linebot/
+```
+
+### env
+
+### 建立/更新 docker container
+
+```
+sudo /bin/bash /var/projects/linebot/sh/rebuild-docker.sh
+```
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).

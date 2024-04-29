@@ -1,0 +1,20 @@
+version: '3'
+
+networks:
+  nginxproxy:
+    external: true
+
+services:
+
+  linebot:
+    image: linebot
+    container_name: linebot
+    environment:
+      - VIRTUAL_HOST=${HOST}
+      - LETSENCRYPT_HOST=${HOST}
+      - LETSENCRYPT_EMAIL=${EMAIL}
+    restart: always
+    logging:
+      driver: gcplogs
+    networks:
+      - nginxproxy
