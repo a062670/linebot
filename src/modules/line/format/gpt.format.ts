@@ -10,7 +10,7 @@ const gptFormat = (userId, prompt, reply) => {
         contents: [
           {
             type: 'text',
-            text: `GPT(${userId})`,
+            text: `GPT(${userId.slice(-10)})`,
             color: '#FFFFFF',
             align: 'center',
           },
@@ -25,7 +25,7 @@ const gptFormat = (userId, prompt, reply) => {
           {
             type: 'text',
             text: prompt,
-            color: '#990000',
+            color: '#AA3300',
           },
         ],
         paddingAll: 'sm',
@@ -47,7 +47,7 @@ const gptFormat = (userId, prompt, reply) => {
         contents: [
           {
             type: 'text',
-            text: process.env.GIT_COMMIT || '000',
+            text: (process.env.GIT_COMMIT || '0000000').slice(0, 7),
             align: 'center',
             color: '#999999',
           },
