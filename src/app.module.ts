@@ -7,9 +7,10 @@ const envModule = ConfigModule.forRoot({
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LineModule } from './modules/line/line.module';
+import { GptModule } from './shared/gpt/gpt.module';
 
 @Module({
-  imports: [envModule, LineModule],
+  imports: [envModule, LineModule, GptModule],
   controllers: [AppController],
   providers: [AppService],
 })
