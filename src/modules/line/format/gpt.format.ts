@@ -1,35 +1,18 @@
-const gptFormat = (userId, prompt, reply) => {
+import { FlexMessage } from '@line/bot-sdk';
+import {
+  sharedFormatHeader,
+  sharedFormatHero,
+  sharedFormatFooter,
+} from './shared.format';
+
+const gptFormat = (userId, prompt, reply): FlexMessage => {
   return {
     type: 'flex',
     altText: 'this is a flex message',
     contents: {
       type: 'bubble',
-      header: {
-        type: 'box',
-        layout: 'vertical',
-        contents: [
-          {
-            type: 'text',
-            text: `GPT(${userId.slice(-10)})`,
-            color: '#FFFFFF',
-            align: 'center',
-          },
-        ],
-        backgroundColor: '#006600',
-        paddingAll: 'xs',
-      },
-      hero: {
-        type: 'box',
-        layout: 'vertical',
-        contents: [
-          {
-            type: 'text',
-            text: prompt,
-            color: '#AA3300',
-          },
-        ],
-        paddingAll: 'md',
-      },
+      header: sharedFormatHeader(`GPT(${userId.slice(-10)})`),
+      hero: sharedFormatHero(prompt),
       body: {
         type: 'box',
         layout: 'vertical',
@@ -41,20 +24,7 @@ const gptFormat = (userId, prompt, reply) => {
         ],
         paddingAll: 'md',
       },
-      footer: {
-        type: 'box',
-        layout: 'vertical',
-        contents: [
-          {
-            type: 'text',
-            text: (process.env.GIT_COMMIT || '0000000').slice(0, 7),
-            align: 'center',
-            color: '#999999',
-          },
-        ],
-        paddingAll: 'xs',
-        backgroundColor: '#BBFFBB',
-      },
+      footer: sharedFormatFooter(),
     },
   };
 };

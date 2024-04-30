@@ -1,12 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { GptService } from '@shared/gpt/gpt.service';
 import { WebhookEvent } from '@line/bot-sdk';
 import { client } from './config/line.config';
+
+import { GptService } from '@shared/gpt/gpt.service';
+import { GoogleSearchService } from '@shared/google-search/google-search.service';
 import gptFormat from './format/gpt.format';
+import { googleSearchFormat } from './format/google-search.format';
 
 @Injectable()
 export class LineService {
-  constructor(private readonly gptService: GptService) {}
+  constructor(
+    private readonly gptService: GptService,
+    private readonly googleSearchService: GoogleSearchService,
+  ) {}
 
   async handleEvent(event: WebhookEvent) {
     if (event.type !== 'message' || event.message.type !== 'text') {
@@ -30,7 +36,8 @@ export class LineService {
   async getReply(content: string, userId: string) {
     const reply =
       (await this.getTestReply(content)) ||
-      (await this.getGptReply(content, userId));
+      (await this.getGptReply(content, userId)) ||
+      (await this.getGoogleSearchReply(content));
     return reply;
   }
 
@@ -58,5 +65,16 @@ export class LineService {
       return gptFormat(userId, prompt, reply);
     }
     return null;
+  }
+
+  /** Google Search */
+  async getGoogleSearchReply(content: string) {
+    if (!content.toLocaleLowerCase().startsWith('/google')) {
+      return null;
+    }
+    const query = content.slice(7).trim();
+    const searchResult = await this.googleSearchService.search(query);
+
+    return googleSearchFormat(query, searchResult);
   }
 }
