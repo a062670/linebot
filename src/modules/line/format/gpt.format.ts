@@ -28,7 +28,7 @@ const gptFormat = (userId, prompt, reply) => {
             color: '#AA3300',
           },
         ],
-        paddingAll: 'sm',
+        paddingAll: 'md',
       },
       body: {
         type: 'box',
@@ -39,7 +39,7 @@ const gptFormat = (userId, prompt, reply) => {
             text: reply,
           },
         ],
-        paddingAll: 'sm',
+        paddingAll: 'md',
       },
       footer: {
         type: 'box',
