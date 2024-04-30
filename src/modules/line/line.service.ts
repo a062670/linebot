@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { WebhookEvent } from '@line/bot-sdk';
-import client from './config/line-client';
+import { client } from './config/line.config';
 
 @Injectable()
 export class LineService {
