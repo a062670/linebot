@@ -1,46 +1,37 @@
 import { FlexMessage } from '@line/bot-sdk';
-import {
-  sharedFormatHeader,
-  sharedFormatHero,
-  sharedFormatFooter,
-} from './shared.format';
-import { GoogleSearchResult } from '@shared/google-search/google-search.service';
+import { sharedFormatHeader, sharedFormatFooter } from './shared.format';
+import { EarthquakeResult } from '@shared/earthquake/earthquake.service';
 
-const googleSearchFormat = (
-  keyword: string,
-  searchResult: GoogleSearchResult[],
+const earthquakeFormat = (
+  earthquakeResult: EarthquakeResult[],
 ): FlexMessage => {
   return {
     type: 'flex',
     altText: 'this is a flex message',
     contents: {
       type: 'bubble',
-      header: sharedFormatHeader('Google Search'),
-      hero: sharedFormatHero(keyword),
+      header: sharedFormatHeader('地震'),
       body: {
         type: 'box',
         layout: 'vertical',
-        contents: searchResult.length
-          ? searchResult.map((result) => ({
+        contents: earthquakeResult.length
+          ? earthquakeResult.map((result) => ({
               type: 'box',
               layout: 'vertical',
               contents: [
                 {
-                  type: 'text',
-                  text: result.title,
-                  color: '#0066FF',
-                },
-                {
-                  type: 'text',
-                  text: result.snippet,
+                  type: 'image',
+                  url: result.image,
+                  size: 'full',
+                  aspectRatio: '4:3',
                 },
               ],
+              paddingAll: 'none',
               action: {
                 type: 'uri',
                 label: 'action',
                 uri: result.link,
               },
-              paddingAll: 'md',
             }))
           : [
               {
@@ -62,4 +53,4 @@ const googleSearchFormat = (
   };
 };
 
-export { googleSearchFormat };
+export { earthquakeFormat };

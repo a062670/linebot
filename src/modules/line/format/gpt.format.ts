@@ -29,4 +29,4 @@ const gptFormat = (userId, prompt, reply): FlexMessage => {
   };
 };
 
-export default gptFormat;
+export { gptFormat };

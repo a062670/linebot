@@ -9,9 +9,16 @@ import { AppService } from './app.service';
 import { LineModule } from './modules/line/line.module';
 import { GptModule } from './shared/gpt/gpt.module';
 import { GoogleSearchModule } from './shared/google-search/google-search.module';
+import { EarthquakeModule } from './shared/earthquake/earthquake.module';
 
 @Module({
-  imports: [envModule, LineModule, GptModule, GoogleSearchModule],
+  imports: [
+    envModule,
+    LineModule,
+    GptModule,
+    GoogleSearchModule,
+    EarthquakeModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -4,14 +4,18 @@ import { client } from './config/line.config';
 
 import { GptService } from '@shared/gpt/gpt.service';
 import { GoogleSearchService } from '@shared/google-search/google-search.service';
-import gptFormat from './format/gpt.format';
+import { EarthquakeService } from '@shared/earthquake/earthquake.service';
+
+import { gptFormat } from './format/gpt.format';
 import { googleSearchFormat } from './format/google-search.format';
+import { earthquakeFormat } from './format/earthquake.format';
 
 @Injectable()
 export class LineService {
   constructor(
     private readonly gptService: GptService,
     private readonly googleSearchService: GoogleSearchService,
+    private readonly earthquakeService: EarthquakeService,
   ) {}
 
   async handleEvent(event: WebhookEvent) {
@@ -37,7 +41,8 @@ export class LineService {
     const reply =
       (await this.getTestReply(content)) ||
       (await this.getGptReply(content, userId)) ||
-      (await this.getGoogleSearchReply(content));
+      (await this.getGoogleSearchReply(content)) ||
+      (await this.getEarthquakeReply(content));
     return reply;
   }
 
@@ -76,5 +81,14 @@ export class LineService {
     const searchResult = await this.googleSearchService.search(query);
 
     return googleSearchFormat(query, searchResult);
+  }
+
+  /** Earthquake */
+  async getEarthquakeReply(content: string) {
+    if (!content.toLocaleLowerCase().startsWith('/地震')) {
+      return null;
+    }
+    const earthquakeResult = await this.earthquakeService.getEarthquakes();
+    return earthquakeFormat(earthquakeResult);
   }
 }
