@@ -4,10 +4,11 @@ import { LineController } from './line.controller';
 import { GptModule } from '@shared/gpt/gpt.module';
 import { GoogleSearchModule } from '@shared/google-search/google-search.module';
 import { EarthquakeModule } from '@shared/earthquake/earthquake.module';
+import { WeatherModule } from '@shared/weather/weather.module';
 
 @Module({
   controllers: [LineController],
   providers: [LineService],
-  imports: [GptModule, GoogleSearchModule, EarthquakeModule],
+  imports: [GptModule, GoogleSearchModule, EarthquakeModule, WeatherModule],
 })
 export class LineModule {}

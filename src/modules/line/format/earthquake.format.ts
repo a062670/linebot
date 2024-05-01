@@ -1,5 +1,9 @@
 import { FlexMessage } from '@line/bot-sdk';
-import { sharedFormatHeader, sharedFormatFooter } from './shared.format';
+import {
+  sharedFormatHeader,
+  sharedFormatFooter,
+  sharedFormatNoResult,
+} from './shared.format';
 import { EarthquakeResult } from '@shared/earthquake/earthquake.service';
 
 const earthquakeFormat = (
@@ -7,15 +11,16 @@ const earthquakeFormat = (
 ): FlexMessage => {
   return {
     type: 'flex',
-    altText: 'this is a flex message',
+    altText: '地震資訊',
     contents: {
       type: 'bubble',
       header: sharedFormatHeader('地震'),
-      body: {
-        type: 'box',
-        layout: 'vertical',
-        contents: earthquakeResult.length
-          ? earthquakeResult.map((result) => ({
+      body: !earthquakeResult.length
+        ? sharedFormatNoResult()
+        : {
+            type: 'box',
+            layout: 'vertical',
+            contents: earthquakeResult.map((result) => ({
               type: 'box',
               layout: 'vertical',
               contents: [
@@ -32,22 +37,9 @@ const earthquakeFormat = (
                 label: 'action',
                 uri: result.link,
               },
-            }))
-          : [
-              {
-                type: 'box',
-                layout: 'vertical',
-                contents: [
-                  {
-                    type: 'text',
-                    text: 'No result',
-                  },
-                ],
-                paddingAll: 'md',
-              },
-            ],
-        paddingAll: 'none',
-      },
+            })),
+            paddingAll: 'none',
+          },
       footer: sharedFormatFooter(),
     },
   };

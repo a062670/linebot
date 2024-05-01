@@ -49,4 +49,23 @@ const sharedFormatFooter = (): FlexBox => {
   };
 };
 
-export { sharedFormatHeader, sharedFormatHero, sharedFormatFooter };
+const sharedFormatNoResult = (): FlexBox => {
+  return {
+    type: 'box',
+    layout: 'vertical',
+    contents: [
+      {
+        type: 'text',
+        text: 'No result',
+      },
+    ],
+    paddingAll: 'md',
+  };
+};
+
+export {
+  sharedFormatHeader,
+  sharedFormatHero,
+  sharedFormatFooter,
+  sharedFormatNoResult,
+};

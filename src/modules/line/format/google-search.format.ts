@@ -3,6 +3,7 @@ import {
   sharedFormatHeader,
   sharedFormatHero,
   sharedFormatFooter,
+  sharedFormatNoResult,
 } from './shared.format';
 import { GoogleSearchResult } from '@shared/google-search/google-search.service';
 
@@ -12,16 +13,17 @@ const googleSearchFormat = (
 ): FlexMessage => {
   return {
     type: 'flex',
-    altText: 'this is a flex message',
+    altText: 'Google Search',
     contents: {
       type: 'bubble',
       header: sharedFormatHeader('Google Search'),
       hero: sharedFormatHero(keyword),
-      body: {
-        type: 'box',
-        layout: 'vertical',
-        contents: searchResult.length
-          ? searchResult.map((result) => ({
+      body: !searchResult.length
+        ? sharedFormatNoResult()
+        : {
+            type: 'box',
+            layout: 'vertical',
+            contents: searchResult.map((result) => ({
               type: 'box',
               layout: 'vertical',
               contents: [
@@ -41,22 +43,9 @@ const googleSearchFormat = (
                 uri: result.link,
               },
               paddingAll: 'md',
-            }))
-          : [
-              {
-                type: 'box',
-                layout: 'vertical',
-                contents: [
-                  {
-                    type: 'text',
-                    text: 'No result',
-                  },
-                ],
-                paddingAll: 'md',
-              },
-            ],
-        paddingAll: 'none',
-      },
+            })),
+            paddingAll: 'none',
+          },
       footer: sharedFormatFooter(),
     },
   };

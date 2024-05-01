@@ -5,10 +5,12 @@ import { client } from './config/line.config';
 import { GptService } from '@shared/gpt/gpt.service';
 import { GoogleSearchService } from '@shared/google-search/google-search.service';
 import { EarthquakeService } from '@shared/earthquake/earthquake.service';
+import { WeatherService } from '@shared/weather/weather.service';
 
 import { gptFormat } from './format/gpt.format';
 import { googleSearchFormat } from './format/google-search.format';
 import { earthquakeFormat } from './format/earthquake.format';
+import { weatherFormat } from './format/weather.format';
 
 @Injectable()
 export class LineService {
@@ -16,6 +18,7 @@ export class LineService {
     private readonly gptService: GptService,
     private readonly googleSearchService: GoogleSearchService,
     private readonly earthquakeService: EarthquakeService,
+    private readonly weatherService: WeatherService,
   ) {}
 
   async handleEvent(event: WebhookEvent) {
@@ -42,7 +45,8 @@ export class LineService {
       (await this.getTestReply(content)) ||
       (await this.getGptReply(content, userId)) ||
       (await this.getGoogleSearchReply(content)) ||
-      (await this.getEarthquakeReply(content));
+      (await this.getEarthquakeReply(content)) ||
+      (await this.getWeatherReply(content));
     return reply;
   }
 
@@ -90,5 +94,17 @@ export class LineService {
     }
     const earthquakeResult = await this.earthquakeService.getEarthquakes();
     return earthquakeFormat(earthquakeResult);
+  }
+
+  /** Weather */
+  async getWeatherReply(content: string) {
+    if (!content.startsWith('/') || !content.endsWith('天氣')) {
+      return null;
+    }
+
+    // /台南天氣 -> 台南
+    const cityName = content.slice(1, -2).trim() || '台北';
+    const weatherResult = await this.weatherService.getWeather(cityName);
+    return weatherFormat(weatherResult);
   }
 }
