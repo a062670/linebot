@@ -32,6 +32,24 @@ const stickerFormatList = (items: Sticker[]): FlexMessage => {
     contents: {
       type: 'bubble',
       header: sharedFormatHeader('貼圖列表'),
+      hero: {
+        type: 'box',
+        layout: 'vertical',
+        contents: [
+          {
+            type: 'button',
+            action: {
+              type: 'uri',
+              label: '預覽',
+              uri: `${process.env.WEBSITE_URL}/public/stickers.html`,
+            },
+            style: 'primary',
+            height: 'sm',
+          },
+        ],
+        paddingAll: 'xxl',
+        paddingBottom: 'none',
+      },
       body: {
         type: 'box',
         layout: 'vertical',

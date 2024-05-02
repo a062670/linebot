@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        text-align: center;
+        padding: 8px;
+      }
+      img {
+        display: block;
+        width: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>名稱</th>
+          <th>圖片</th>
+          <th>建立時間</th>
+        </tr>
+      </thead>
+      <tbody id="stickers"></tbody>
+    </table>
+    <script>
+      (async () => {
+        const response = await fetch('/sticker');
+        const stickers = await response.json();
+
+        const stickersElement = document.getElementById('stickers');
+        stickers.forEach((sticker) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${sticker.id}</td>
+            <td>${sticker.name}</td>
+            <td><img src="${sticker.imageUrl}" alt="${sticker.name}" /></td>
+            <td>${sticker.createdAt}</td>
+          `;
+          stickersElement.appendChild(tr);
+        });
+      })();
+    </script>
+  </body>
+</html>
