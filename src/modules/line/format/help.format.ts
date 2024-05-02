@@ -35,7 +35,7 @@ const helpFormat = (): FlexMessage => {
               text: command,
               wrap: true,
               color: '#999999',
-              size: 'xs',
+              size: 'sm',
             },
           ],
         })),
