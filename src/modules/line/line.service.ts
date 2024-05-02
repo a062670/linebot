@@ -17,6 +17,7 @@ import {
   stickerFormatList,
   stickerFormatImage,
 } from './format/sticker.format';
+import { helpFormat } from './format/help.format';
 
 @Injectable()
 export class LineService {
@@ -54,7 +55,8 @@ export class LineService {
       (await this.getGoogleSearchReply(content)) ||
       (await this.getEarthquakeReply(content)) ||
       (await this.getWeatherReply(content)) ||
-      (await this.getStickerReply(content));
+      (await this.getStickerReply(content)) ||
+      (await this.getHelpReply(content));
     return reply;
   }
 
@@ -151,5 +153,13 @@ export class LineService {
       return stickerFormatText(name, 'No result');
     }
     return stickerFormatImage(sticker);
+  }
+
+  /** Help */
+  async getHelpReply(content: string) {
+    if (!content.toLocaleLowerCase().startsWith('/help')) {
+      return null;
+    }
+    return helpFormat();
   }
 }
