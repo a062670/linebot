@@ -5,6 +5,7 @@ ENV GIT_COMMIT=$GIT_COMMIT
 
 WORKDIR /build
 COPY package.json /build/package.json
+COPY package-lock.json /build/package-lock.json
 
 RUN npm install
 COPY . /build/
