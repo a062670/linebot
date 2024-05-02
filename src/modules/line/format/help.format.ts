@@ -23,19 +23,23 @@ const helpFormat = (): FlexMessage => {
         layout: 'vertical',
         contents: list.map(([command, description]) => ({
           type: 'box',
-          layout: 'baseline',
+          layout: 'vertical',
           contents: [
             {
               type: 'text',
-              text: command,
+              text: description,
+              wrap: true,
             },
             {
               type: 'text',
-              text: description,
+              text: command,
+              wrap: true,
+              color: '#999999',
+              size: 'xs',
             },
           ],
         })),
-        spacing: 'md',
+        spacing: 'xl',
       },
       footer: sharedFormatFooter(),
     },
