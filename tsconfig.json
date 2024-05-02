@@ -19,7 +19,8 @@
     "noFallthroughCasesInSwitch": false,
     "moduleResolution": "node",
     "paths": {
-      "@shared/*": ["src/shared/*"]
+      "@shared/*": ["src/shared/*"],
+      "@libs/*": ["src/libs/*"]
     }
   }
 }
