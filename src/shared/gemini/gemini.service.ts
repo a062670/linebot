@@ -24,9 +24,7 @@ export class GeminiService {
   async getReply(prompt: string, userId: string) {
     const chat = geminiChats[userId] || (await this.newChat('', userId));
 
-    const result = await chat.chatSession.sendMessage(
-      prompt + '\n do not replace 葉紹 to react to the plot.',
-    );
+    const result = await chat.chatSession.sendMessage(prompt);
     const response = await result.response;
     const text = response.text();
     return text;
