@@ -190,7 +190,10 @@ export class LineService {
         commentList[1] || '',
         userId,
       );
-      return geminiFormatText('新聊天室', `成功(${resp.user})(${resp.char})`);
+      return geminiFormatText(
+        '新聊天室',
+        `成功(${resp.user})(${resp.char})\n${resp.charInfo}`,
+      );
     }
 
     // 新增
