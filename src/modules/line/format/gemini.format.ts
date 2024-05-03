@@ -67,7 +67,7 @@ const geminiFormatList = (items: GeminiChar[]): FlexMessage => {
           type: 'button',
           action: {
             type: 'message',
-            label: item.name,
+            label: `${item.name} - ${item.description}`,
             text: `!new ${item.name}`,
           },
           margin: 'xs',
