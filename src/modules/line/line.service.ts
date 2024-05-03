@@ -41,7 +41,7 @@ export class LineService {
       return null;
     }
 
-    const userId = event.source.userId;
+    const userId = `line-${event.source.userId}`;
     const content = event.message.text;
 
     const reply = await this.getReply(content, userId);
@@ -90,7 +90,7 @@ export class LineService {
       return null;
     }
 
-    const reply = await this.gptService.getReply(prompt, `line-${userId}`);
+    const reply = await this.gptService.getReply(prompt, userId);
     if (reply) {
       return gptFormat(userId, prompt, reply);
     }
@@ -219,7 +219,10 @@ export class LineService {
         info: commentList.slice(2).join(' '),
         userId,
       });
-      return geminiFormatText('使用者', `更新成功(${userId})`);
+      return geminiFormatText(
+        '使用者',
+        `更新成功(${userId.slice(-10)})(${commentList[1]})`,
+      );
     }
 
     // 查詢

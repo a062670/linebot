@@ -21,6 +21,7 @@ const geminiFormat = (userId, prompt, reply): FlexMessage => {
           {
             type: 'text',
             text: reply,
+            wrap: true,
           },
         ],
         paddingAll: 'md',
@@ -44,6 +45,7 @@ const geminiFormatText = (title: string, message: string): FlexMessage => {
           {
             type: 'text',
             text: message,
+            wrap: true,
           },
         ],
         paddingAll: 'md',

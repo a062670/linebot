@@ -20,6 +20,7 @@ const gptFormat = (userId, prompt, reply): FlexMessage => {
           {
             type: 'text',
             text: reply,
+            wrap: true,
           },
         ],
         paddingAll: 'md',
