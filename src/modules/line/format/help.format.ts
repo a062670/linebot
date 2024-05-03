@@ -11,6 +11,11 @@ const helpFormat = (): FlexMessage => {
     ['#新增 {name} {url}', '新增貼圖'],
     ['#add {name} {url}', '新增貼圖'],
     ['#{name}', '召喚貼圖'],
+    ['!', 'gemini 角色列表'],
+    ['!add {name} {描述} {詳細資訊}', '新增 gemini 角色'],
+    ['!user {name} {info}', '設定 gemini 使用者資訊 ex: !user 葉紹 男，25歲'],
+    ['!new {角色.name}', '建立與指定角色的 gemini 聊天室'],
+    ['!{msg}', '開始 gemini 聊天'],
   ];
   return {
     type: 'flex',
@@ -27,12 +32,12 @@ const helpFormat = (): FlexMessage => {
           contents: [
             {
               type: 'text',
-              text: description,
+              text: command,
               wrap: true,
             },
             {
               type: 'text',
-              text: command,
+              text: description,
               wrap: true,
               color: '#999999',
               size: 'sm',
