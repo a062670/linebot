@@ -7,6 +7,7 @@ import { GoogleSearchService } from '@shared/google-search/google-search.service
 import { EarthquakeService } from '@shared/earthquake/earthquake.service';
 import { WeatherService } from '@shared/weather/weather.service';
 import { StickerService } from '@shared/sticker/sticker.service';
+import { GeminiService } from '@shared/gemini/gemini.service';
 
 import { gptFormat } from './format/gpt.format';
 import { googleSearchFormat } from './format/google-search.format';
@@ -17,6 +18,11 @@ import {
   stickerFormatList,
   stickerFormatImage,
 } from './format/sticker.format';
+import {
+  geminiFormat,
+  geminiFormatText,
+  geminiFormatList,
+} from './format/gemini.format';
 import { helpFormat } from './format/help.format';
 
 @Injectable()
@@ -27,6 +33,7 @@ export class LineService {
     private readonly earthquakeService: EarthquakeService,
     private readonly weatherService: WeatherService,
     private readonly stickerService: StickerService,
+    private readonly geminiService: GeminiService,
   ) {}
 
   async handleEvent(event: WebhookEvent) {
@@ -56,6 +63,7 @@ export class LineService {
       (await this.getEarthquakeReply(content)) ||
       (await this.getWeatherReply(content)) ||
       (await this.getStickerReply(content)) ||
+      (await this.getGeminiReply(content, userId)) ||
       (await this.getHelpReply(content));
     return reply;
   }
@@ -78,6 +86,9 @@ export class LineService {
       return null;
     }
     const prompt = content.slice(4).trim();
+    if (!prompt) {
+      return null;
+    }
 
     const reply = await this.gptService.getReply(prompt, `line-${userId}`);
     if (reply) {
@@ -153,6 +164,68 @@ export class LineService {
       return stickerFormatText(name, 'No result');
     }
     return stickerFormatImage(sticker);
+  }
+
+  /** Gemini */
+  async getGeminiReply(content: string, userId: string) {
+    if (!content.toLocaleLowerCase().startsWith('!')) {
+      return null;
+    }
+
+    const commentList = content
+      .slice(1)
+      .trim()
+      .split(' ')
+      .filter((comment) => !!comment);
+
+    // 列表
+    if (!commentList.length) {
+      const charList = await this.geminiService.getCharAll();
+      return geminiFormatList(charList);
+    }
+
+    // 新聊天室
+    if (commentList.length >= 1 && commentList[0] === 'new') {
+      const resp = await this.geminiService.newChat(
+        commentList[1] || '',
+        userId,
+      );
+      return geminiFormatText('新聊天室', `成功(${resp.user})(${resp.char})`);
+    }
+
+    // 新增
+    if (
+      commentList.length >= 4 &&
+      (commentList[0] === '新增' || commentList[0] === 'add')
+    ) {
+      await this.geminiService.createChar({
+        name: commentList[1],
+        description: commentList[2],
+        info: commentList.slice(3).join(' '),
+      });
+      return geminiFormatText('新增', `新增成功(${commentList[1]})`);
+    }
+
+    // 使用者
+    if (
+      commentList.length >= 3 &&
+      (commentList[0] === '使用者' || commentList[0] === 'user')
+    ) {
+      await this.geminiService.createUser({
+        name: commentList[1],
+        info: commentList.slice(2).join(' '),
+        userId,
+      });
+      return geminiFormatText('使用者', `更新成功(${userId})`);
+    }
+
+    // 查詢
+    const prompt = commentList.join(' ');
+    const reply = await this.geminiService.getReply(prompt, userId);
+    if (reply) {
+      return geminiFormat(userId, prompt, reply);
+    }
+    return null;
   }
 
   /** Help */
