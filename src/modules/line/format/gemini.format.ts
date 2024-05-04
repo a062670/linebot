@@ -6,7 +6,12 @@ import {
 } from './shared.format';
 import { GeminiChar } from '@shared/gemini/entities/gemini.entity';
 
-const geminiFormat = (userId, prompt, reply): FlexMessage => {
+const geminiFormat = (
+  userId: string,
+  prompt: string,
+  char: string,
+  reply: string,
+): FlexMessage => {
   return {
     type: 'flex',
     altText: 'this is a flex message',
@@ -20,7 +25,7 @@ const geminiFormat = (userId, prompt, reply): FlexMessage => {
         contents: [
           {
             type: 'text',
-            text: reply,
+            text: `${char}:\n\n${reply}`,
             wrap: true,
           },
         ],

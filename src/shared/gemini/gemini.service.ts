@@ -27,7 +27,7 @@ export class GeminiService {
     const result = await chat.chatSession.sendMessage(prompt);
     const response = await result.response;
     const text = response.text();
-    return text;
+    return { chat, text };
   }
 
   /** 基本訊息 */
@@ -89,6 +89,9 @@ export class GeminiService {
     chat.userInfo = user.info.replace(/{{user}}/g, user.name);
     chat.char = char.name;
     chat.charInfo = char.info.replace(/{{char}}/g, char.name);
+    chat.firstMessage = (char.firstMessage || '你好')
+      .replace(/{{user}}/g, user.name)
+      .replace(/{{char}}/g, char.name);
     chat.chatSession = model.startChat({
       history: [
         {
@@ -106,7 +109,7 @@ export class GeminiService {
         },
         {
           role: 'model',
-          parts: [{ text: '你好' }],
+          parts: [{ text: chat.firstMessage }],
         },
       ],
       safetySettings,

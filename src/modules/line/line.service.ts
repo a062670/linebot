@@ -192,7 +192,7 @@ export class LineService {
       );
       return geminiFormatText(
         '新聊天室',
-        `成功(${resp.user})(${resp.char})\n${resp.charInfo}`,
+        `成功(${resp.user})\n\n${resp.char}:\n\n${resp.firstMessage}`,
       );
     }
 
@@ -229,7 +229,7 @@ export class LineService {
     const prompt = commentList.join(' ');
     const reply = await this.geminiService.getReply(prompt, userId);
     if (reply) {
-      return geminiFormat(userId, prompt, reply);
+      return geminiFormat(userId, prompt, reply.chat.char, reply.text);
     }
     return null;
   }

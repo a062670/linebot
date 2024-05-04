@@ -10,5 +10,6 @@ export type GeminiChat = {
   userInfo: string;
   char: string;
   charInfo: string;
+  firstMessage: string;
   chatSession: ChatSession;
 };

@@ -28,6 +28,13 @@ export class GeminiChar {
   })
   info: string;
 
+  /** 第一則訊息 */
+  @Column({
+    comment: '第一則訊息',
+    nullable: true,
+  })
+  firstMessage: string;
+
   /** 建立時間 */
   @CreateDateColumn({
     comment: '建立時間',
