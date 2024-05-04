@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form>
+      <label> name: <input type="text" name="name" /> </label>
+      <br />
+      <label> description: <input type="text" name="description" /> </label>
+      <br />
+      <label> info: <textarea name="info"></textarea></label><br />
+      <br />
+      <label> firstMessage: <textarea name="firstMessage"></textarea></label>
+      <br />
+      <button type="submit">Submit</button>
+    </form>
+
+    <script>
+      document.querySelector('form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // 轉 json
+        const data = Object.fromEntries(new FormData(e.target));
+        // 送出
+        const res = await fetch('/gemini/char', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+        // 確認是否成功
+        console.log(res.ok);
+      });
+    </script>
+  </body>
+</html>

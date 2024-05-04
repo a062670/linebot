@@ -140,6 +140,7 @@ export class GeminiService {
     char.name = createGeminiCharDto.name;
     char.description = createGeminiCharDto.description;
     char.info = createGeminiCharDto.info;
+    char.firstMessage = createGeminiCharDto.firstMessage;
 
     return this.charRepository.save(char);
   }
@@ -149,6 +150,9 @@ export class GeminiService {
     return this.charRepository.findOne({
       where: {
         name,
+      },
+      order: {
+        id: 'DESC',
       },
     });
   }

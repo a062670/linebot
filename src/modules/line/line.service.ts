@@ -205,6 +205,7 @@ export class LineService {
         name: commentList[1],
         description: commentList[2],
         info: commentList.slice(3).join(' '),
+        firstMessage: '',
       });
       return geminiFormatText('新增', `新增成功(${commentList[1]})`);
     }
