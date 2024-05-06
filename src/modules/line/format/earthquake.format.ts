@@ -29,14 +29,31 @@ const earthquakeFormat = (
                   url: result.image,
                   size: 'full',
                   aspectRatio: '4:3',
+                  action: {
+                    type: 'uri',
+                    label: 'action',
+                    uri: result.image,
+                  },
+                },
+                {
+                  type: 'box',
+                  layout: 'vertical',
+                  contents: [
+                    {
+                      type: 'button',
+                      action: {
+                        type: 'uri',
+                        label: '詳細資訊',
+                        uri: result.link,
+                      },
+                      style: 'primary',
+                      height: 'sm',
+                    },
+                  ],
+                  paddingAll: 'md',
                 },
               ],
               paddingAll: 'none',
-              action: {
-                type: 'uri',
-                label: 'action',
-                uri: result.link,
-              },
             })),
             paddingAll: 'none',
           },
