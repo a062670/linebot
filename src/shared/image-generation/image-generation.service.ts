@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
-import * as unzipper from 'unzipper';
+import * as AdmZip from 'adm-zip';
 
 @Injectable()
 export class ImageGenerationService {
@@ -65,9 +65,18 @@ export class ImageGenerationService {
       const arrayBuffer = await response.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       const folder = `public/image-generation/${Date.now()}`;
+      const zipFile = `${folder}/zip.zip`;
       fs.mkdirSync(folder, { recursive: true });
-      const directory = await unzipper.Open.buffer(buffer);
-      await directory.extract({ path: folder });
+      fs.writeFileSync(zipFile, buffer);
+
+      // 解壓縮
+      const zip = new AdmZip(zipFile);
+      zip.extractAllTo(folder, true);
+
+      // 刪除zip檔
+      fs.unlinkSync(zipFile);
+
+      // 取得所有圖片路徑
       const files = fs
         .readdirSync(folder)
         .map((item) => `${process.env.WEBSITE_URL}/${folder}/${item}`);
