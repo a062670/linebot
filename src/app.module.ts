@@ -18,6 +18,7 @@ import { EarthquakeModule } from './shared/earthquake/earthquake.module';
 import { WeatherModule } from './shared/weather/weather.module';
 import { StickerModule } from './shared/sticker/sticker.module';
 import { GeminiModule } from './shared/gemini/gemini.module';
+import { ImageGenerationModule } from './shared/image-generation/image-generation.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { GeminiModule } from './shared/gemini/gemini.module';
     WeatherModule,
     StickerModule,
     GeminiModule,
+    ImageGenerationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

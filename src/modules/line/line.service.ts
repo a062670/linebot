@@ -8,6 +8,7 @@ import { EarthquakeService } from '@shared/earthquake/earthquake.service';
 import { WeatherService } from '@shared/weather/weather.service';
 import { StickerService } from '@shared/sticker/sticker.service';
 import { GeminiService } from '@shared/gemini/gemini.service';
+import { ImageGenerationService } from '@shared/image-generation/image-generation.service';
 
 import { gptFormat } from './format/gpt.format';
 import { googleSearchFormat } from './format/google-search.format';
@@ -18,6 +19,10 @@ import {
   stickerFormatList,
   stickerFormatImage,
 } from './format/sticker.format';
+import {
+  imageGenerationFormat,
+  imageGenerationFormatError,
+} from './format/image-generation.format';
 import {
   geminiFormat,
   geminiFormatText,
@@ -34,6 +39,7 @@ export class LineService {
     private readonly weatherService: WeatherService,
     private readonly stickerService: StickerService,
     private readonly geminiService: GeminiService,
+    private readonly imageGenerationService: ImageGenerationService,
   ) {}
 
   async handleEvent(event: WebhookEvent) {
@@ -64,6 +70,7 @@ export class LineService {
       (await this.getWeatherReply(content)) ||
       (await this.getStickerReply(content)) ||
       (await this.getGeminiReply(content, userId)) ||
+      (await this.getImageGenerationReply(content)) ||
       (await this.getHelpReply(content));
     return reply;
   }
@@ -231,6 +238,25 @@ export class LineService {
     const reply = await this.geminiService.getReply(prompt, userId);
     if (reply) {
       return geminiFormat(userId, prompt, reply.chat.char, reply.text);
+    }
+    return null;
+  }
+
+  /** Image Generation */
+  async getImageGenerationReply(content: string) {
+    if (!content.toLocaleLowerCase().startsWith('/image')) {
+      return null;
+    }
+    const input = content.slice(7).trim();
+    if (!input) {
+      return null;
+    }
+
+    try {
+      const data = await this.imageGenerationService.generate(input);
+      return imageGenerationFormat(input, data.urls);
+    } catch (error) {
+      return imageGenerationFormatError(input, error.message);
     }
     return null;
   }
