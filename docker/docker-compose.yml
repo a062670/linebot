@@ -12,6 +12,7 @@ services:
     volumes:
       - "../data:/build/data"
       - "../public/image-generation:/build/public/image-generation"
+      - "../.env:/build/.env"
     environment:
       - VIRTUAL_HOST=${HOST}
       - LETSENCRYPT_HOST=${HOST}
