@@ -1,7 +1,7 @@
 FROM node:20.11.0
 
 ARG GIT_COMMIT
-ENV GIT_COMMIT=$GIT_COMMIT
+ENV GIT_COMMIT=${GIT_COMMIT}
 
 WORKDIR /build
 COPY package.json /build/package.json
