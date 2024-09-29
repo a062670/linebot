@@ -7,6 +7,7 @@ const helpFormat = (): FlexMessage => {
     ['/google {query}', 'Google Search'],
     ['/地震', '最新地震情報'],
     ['/天氣 or /{縣市}天氣', '天氣情報'],
+    ['/image [-furry] [-ref url] {提示詞}', '圖片生成器'],
     ['#', '貼圖列表'],
     ['#新增 {name} {url}', '新增貼圖'],
     ['#add {name} {url}', '新增貼圖'],
