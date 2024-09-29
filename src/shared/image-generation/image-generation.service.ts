@@ -6,13 +6,55 @@ import * as AdmZip from 'adm-zip';
 export class ImageGenerationService {
   async generate(input: string) {
     try {
+      const inputList = input.split(' ');
+
       const token = process.env.NOVEL_AI_API_KEY;
+
+      // 模型預設為 nai-diffusion-3
+      let model = 'nai-diffusion-3';
+      // 如果有 -furry 參數
+      if (inputList.includes('-furry')) {
+        // 移除
+        const index = inputList.indexOf('-furry');
+        inputList.splice(index, 1);
+        // 更換模型
+        model = 'nai-diffusion-furry-3';
+      }
+
+      // 負面提示
       const negativePrompt =
         'lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, bad feet';
+
+      // 產生隨機種子
       const seed = Math.floor(Math.random() * 10000000000);
+
+      // 參考圖片
+      const referenceImages = [];
+      const referenceInformationExtracted = [];
+      const referenceStrength = [];
+      if (inputList.includes('-ref')) {
+        const index = inputList.indexOf('-ref');
+        inputList.splice(index, 1);
+        // 從 index 開始，取得參考圖片，直到沒有 http 開頭
+        for (let i = index; i < inputList.length; i++) {
+          if (inputList[i].startsWith('http')) {
+            // 讀取圖片並轉成 base64
+            const response = await fetch(inputList[i]);
+            const buffer = await response.arrayBuffer();
+            const base64 = Buffer.from(buffer).toString('base64');
+            referenceImages.push(base64);
+            referenceInformationExtracted.push(1);
+            referenceStrength.push(0.6);
+          } else {
+            break;
+          }
+        }
+      }
+
+      // 設定參數
       const body = {
         input: input,
-        model: 'nai-diffusion-3',
+        model: model,
         action: 'generate',
         parameters: {
           params_version: 3,
@@ -36,9 +78,10 @@ export class ImageGenerationService {
           skip_cfg_above_sigma: null,
           seed: seed,
           negative_prompt: negativePrompt,
-          reference_image_multiple: [],
-          reference_information_extracted_multiple: [],
-          reference_strength_multiple: [],
+          reference_image_multiple: referenceImages,
+          reference_information_extracted_multiple:
+            referenceInformationExtracted,
+          reference_strength_multiple: referenceStrength,
         },
       };
       const response = await fetch(
