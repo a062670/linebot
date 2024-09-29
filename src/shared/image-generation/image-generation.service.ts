@@ -6,7 +6,7 @@ import * as AdmZip from 'adm-zip';
 export class ImageGenerationService {
   async generate(input: string) {
     try {
-      const inputList = input.split(' ');
+      let inputList = input.split(' ');
 
       const token = process.env.NOVEL_AI_API_KEY;
 
@@ -51,9 +51,15 @@ export class ImageGenerationService {
         }
       }
 
+      // 移除參考圖片
+      inputList = inputList.filter((item) => !item.startsWith('http'));
+
+      // 重新組合參數
+      const newInput = inputList.join(' ');
+
       // 設定參數
       const body = {
-        input: input,
+        input: newInput,
         model: model,
         action: 'generate',
         parameters: {
