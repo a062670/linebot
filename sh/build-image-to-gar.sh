@@ -1,6 +1,6 @@
-source /sh/.env
-
 cd /var/projects/linebot/
+
+source sh/.env
 
 # 更新版控
 sudo git fetch

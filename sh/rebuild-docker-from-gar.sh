@@ -1,4 +1,6 @@
-source /sh/.env
+cd /var/projects/linebot/
+
+source sh/.env
 
 sudo docker stop linebot
 sudo docker rm linebot
