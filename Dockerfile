@@ -9,6 +9,12 @@ COPY package-lock.json /build/package-lock.json
 
 RUN npm install
 COPY . /build/
+
+# 刪除 .env
+RUN rm -f .env
+RUN rm -f docker/.env
+RUN rm -f sh/.env
+
 RUN npm run build
 
 EXPOSE 80

@@ -7,10 +7,11 @@ networks:
 services:
 
   linebot:
-    image: linebot
+    image: ${IMAGE}
     container_name: linebot
     volumes:
       - "../data:/build/data"
+      - "../public/image-generation:/build/public/image-generation"
     environment:
       - VIRTUAL_HOST=${HOST}
       - LETSENCRYPT_HOST=${HOST}
