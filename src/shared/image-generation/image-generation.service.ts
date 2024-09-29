@@ -55,7 +55,9 @@ export class ImageGenerationService {
       inputList = inputList.filter((item) => !item.startsWith('http'));
 
       // 重新組合參數
-      const newInput = inputList.join(' ');
+      const newInput =
+        inputList.join(' ') +
+        ', best quality, amazing quality, very aesthetic, absurdres';
 
       // 設定參數
       const body = {
