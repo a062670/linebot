@@ -8,6 +8,7 @@ const helpFormat = (): FlexMessage => {
     ['/地震', '最新地震情報'],
     ['/天氣 or /{縣市}天氣', '天氣情報'],
     ['/image [-furry] [-ref url] {提示詞}', '圖片生成器'],
+    ['/userid', '取得自己的 line userId'],
     ['#', '貼圖列表'],
     ['#新增 {name} {url}', '新增貼圖'],
     ['#add {name} {url}', '新增貼圖'],

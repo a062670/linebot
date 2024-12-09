@@ -71,6 +71,7 @@ export class LineService {
       (await this.getStickerReply(content)) ||
       (await this.getGeminiReply(content, userId)) ||
       (await this.getImageGenerationReply(content)) ||
+      (await this.getUserId(content, userId)) ||
       (await this.getHelpReply(content));
     return reply;
   }
@@ -259,6 +260,17 @@ export class LineService {
       return imageGenerationFormatError(input, error.message);
     }
     return null;
+  }
+
+  /** User ID */
+  async getUserId(content: string, userId: string) {
+    if (!content.toLocaleLowerCase().startsWith('/userid')) {
+      return null;
+    }
+    return {
+      type: 'text',
+      text: `User ID: ${userId.replace('line-', '')}`,
+    };
   }
 
   /** Help */
