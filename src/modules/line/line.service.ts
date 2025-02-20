@@ -165,6 +165,16 @@ export class LineService {
       return stickerFormatText(`新增 ${name}`, resp);
     }
 
+    // 刪除
+    if (
+      commentList.length >= 2 &&
+      ['刪除', 'del', 'delete'].includes(commentList[0])
+    ) {
+      const name = commentList[1];
+      const resp = await this.stickerService.remove(name);
+      return stickerFormatText(`刪除 ${name}`, resp.affected ? '成功' : '失敗');
+    }
+
     // 查詢
     const name = commentList[0];
     const sticker = await this.stickerService.findOne(name);

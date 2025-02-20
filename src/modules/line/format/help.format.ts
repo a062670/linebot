@@ -12,6 +12,8 @@ const helpFormat = (): FlexMessage => {
     ['#', '貼圖列表'],
     ['#新增 {name} {url}', '新增貼圖'],
     ['#add {name} {url}', '新增貼圖'],
+    ['#刪除 {name}', '刪除貼圖'],
+    ['#del {name}', '刪除貼圖'],
     ['#{name}', '召喚貼圖'],
     ['!', 'gemini 角色列表'],
     ['!add {name} {描述} {詳細資訊}', '新增 gemini 角色'],
