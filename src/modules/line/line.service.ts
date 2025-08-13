@@ -177,7 +177,10 @@ export class LineService {
 
     // 查詢
     const name = commentList[0];
-    const sticker = await this.stickerService.findOne(name);
+    let sticker = await this.stickerService.findOne(name);
+    if (!sticker) {
+      sticker = await this.stickerService.findFromGoogle(name);
+    }
     if (!sticker) {
       return stickerFormatText(name, 'No result');
     }
