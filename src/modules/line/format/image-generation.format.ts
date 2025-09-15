@@ -24,7 +24,7 @@ const imageGenerationFormat = (input: string, urls: string[]): FlexMessage => {
               type: 'image',
               url: url,
               size: 'full',
-              aspectRatio: '13:19',
+              // aspectRatio: '13:19',
               action: {
                 type: 'uri',
                 label: 'action',

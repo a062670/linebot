@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as AdmZip from 'adm-zip';
+import { GoogleGenAI } from '@google/genai';
 
 @Injectable()
 export class ImageGenerationService {
@@ -116,7 +117,7 @@ export class ImageGenerationService {
       const folder = `public/image-generation/${Date.now()}`;
       const zipFile = `${folder}/zip.zip`;
       fs.mkdirSync(folder, { recursive: true });
-      fs.writeFileSync(zipFile, buffer);
+      fs.writeFileSync(zipFile, new Uint8Array(buffer));
 
       // 解壓縮
       const zip = new AdmZip(zipFile);
@@ -133,5 +134,38 @@ export class ImageGenerationService {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  async generateWithGoogle(input: string) {
+    const ai = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+    });
+
+    const prompt = input;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash-image-preview',
+      contents: prompt,
+    });
+    const folder = `public/image-generation/${Date.now()}`;
+    for (const partIdx in response.candidates[0].content.parts) {
+      const part = response.candidates[0].content.parts[partIdx];
+      if (part.inlineData) {
+        const imageData = part.inlineData.data;
+        const buffer = Buffer.from(imageData, 'base64');
+        fs.mkdirSync(folder, { recursive: true });
+        fs.writeFileSync(
+          `${folder}/part${partIdx}.png`,
+          new Uint8Array(buffer),
+        );
+      } else if (part.text) {
+        // console.log(part.text);
+      }
+    }
+
+    const files = fs
+      .readdirSync(folder)
+      .map((item) => `${process.env.WEBSITE_URL}/${folder}/${item}`);
+    return { urls: files };
   }
 }

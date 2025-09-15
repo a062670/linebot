@@ -267,7 +267,8 @@ export class LineService {
     }
 
     try {
-      const data = await this.imageGenerationService.generate(input);
+      // const data = await this.imageGenerationService.generate(input);
+      const data = await this.imageGenerationService.generateWithGoogle(input);
       return imageGenerationFormat(input, data.urls);
     } catch (error) {
       return imageGenerationFormatError(input, error.message);
