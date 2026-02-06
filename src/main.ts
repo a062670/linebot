@@ -8,6 +8,6 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.use('line/webhook', LineMiddleware);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  await app.listen(80);
+  await app.listen(9488);
 }
 bootstrap();
