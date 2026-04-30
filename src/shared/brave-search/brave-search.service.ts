@@ -6,6 +6,10 @@ import {
 
 const BRAVE_API_BASE = 'https://api.search.brave.com/res/v1';
 
+const LOCALE_PARAMS = {
+  country: 'TW',
+};
+
 @Injectable()
 export class BraveSearchService {
   private readonly logger = new Logger(BraveSearchService.name);
@@ -17,8 +21,13 @@ export class BraveSearchService {
     };
   }
 
+  private buildUrl(path: string, params: Record<string, string>) {
+    const qs = new URLSearchParams({ ...LOCALE_PARAMS, ...params });
+    return `${BRAVE_API_BASE}${path}?${qs.toString()}`;
+  }
+
   async searchWeb(keyword: string): Promise<WebSearchResult[]> {
-    const url = `${BRAVE_API_BASE}/web/search?q=${encodeURIComponent(keyword)}`;
+    const url = this.buildUrl('/web/search', { q: keyword });
     const resp = await fetch(url, { headers: this.headers });
 
     if (!resp.ok) {
@@ -41,7 +50,10 @@ export class BraveSearchService {
     keyword: string,
     count = 10,
   ): Promise<ImageSearchResult[]> {
-    const url = `${BRAVE_API_BASE}/images/search?q=${encodeURIComponent(keyword)}&count=${count}`;
+    const url = this.buildUrl('/images/search', {
+      q: keyword,
+      count: String(count),
+    });
     const resp = await fetch(url, { headers: this.headers });
 
     if (!resp.ok) {
