@@ -194,6 +194,17 @@ export class GeminiService {
       },
     });
   }
+
+  /** 對話懶人包 */
+  async summarize(transcript: string) {
+    const prompt = `以下是一段 LINE 對話紀錄，請以繁體中文整理成「懶人包」：列出主要議題、每個議題的關鍵內容與結論，使用條列格式。整體控制在 1500 字內。
+
+對話紀錄：
+${transcript}`;
+
+    const result = await model.generateContent(prompt);
+    return result.response.text();
+  }
 }
 
 export { GeminiChar };

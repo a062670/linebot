@@ -9,6 +9,7 @@ import { WeatherService } from '@shared/weather/weather.service';
 import { StickerService } from '@shared/sticker/sticker.service';
 import { GeminiService } from '@shared/gemini/gemini.service';
 import { ImageGenerationService } from '@shared/image-generation/image-generation.service';
+import { MessageService } from '@shared/message/message.service';
 
 import { gptFormat } from './format/gpt.format';
 import { googleSearchFormat } from './format/google-search.format';
@@ -40,6 +41,7 @@ export class LineService {
     private readonly stickerService: StickerService,
     private readonly geminiService: GeminiService,
     private readonly imageGenerationService: ImageGenerationService,
+    private readonly messageService: MessageService,
   ) {}
 
   async handleEvent(event: WebhookEvent) {
@@ -48,9 +50,10 @@ export class LineService {
     }
 
     const userId = `line-${event.source.userId}`;
+    const sourceId = this.getSourceId(event.source);
     const content = event.message.text;
 
-    const reply = await this.getReply(content, userId);
+    const reply = await this.getReply(content, userId, sourceId);
 
     if (reply) {
       return client.replyMessage({
@@ -58,10 +61,24 @@ export class LineService {
         messages: [reply],
       });
     }
+
+    if (!/^[/#!]/.test(content)) {
+      await this.messageService.save({
+        sourceId,
+        userId: event.source.userId || '',
+        text: content,
+      });
+    }
     return null;
   }
 
-  async getReply(content: string, userId: string) {
+  private getSourceId(source: WebhookEvent['source']): string {
+    if (source.type === 'group') return `group-${source.groupId}`;
+    if (source.type === 'room') return `room-${source.roomId}`;
+    return `user-${source.userId}`;
+  }
+
+  async getReply(content: string, userId: string, sourceId = '') {
     const reply =
       (await this.getTestReply(content)) ||
       (await this.getGptReply(content, userId)) ||
@@ -72,6 +89,7 @@ export class LineService {
       (await this.getGeminiReply(content, userId)) ||
       (await this.getImageGenerationReply(content)) ||
       (await this.getUserId(content, userId)) ||
+      (await this.getSummaryReply(content, sourceId)) ||
       (await this.getHelpReply(content));
     return reply;
   }
@@ -284,6 +302,39 @@ export class LineService {
     return {
       type: 'text',
       text: `User ID: ${userId.replace('line-', '')}`,
+    };
+  }
+
+  /** 懶人包 */
+  async getSummaryReply(content: string, sourceId: string) {
+    if (!content.startsWith('/懶人包')) {
+      return null;
+    }
+    if (!sourceId) {
+      return { type: 'text' as const, text: '無法辨識訊息來源' };
+    }
+
+    const arg = content.slice(4).trim();
+    const requested = parseInt(arg, 10) || 50;
+    const n = Math.max(1, Math.min(requested, 100));
+
+    const messages = await this.messageService.findRecent(sourceId, n);
+    if (!messages.length) {
+      return { type: 'text' as const, text: '沒有可分析的對話紀錄' };
+    }
+
+    const transcript = messages
+      .map((m) => `${m.userId.slice(-6)}: ${m.text}`)
+      .join('\n');
+
+    const summary = await this.geminiService.summarize(transcript);
+
+    return {
+      type: 'text' as const,
+      text: `懶人包（最近 ${messages.length} 則）：\n\n${summary}`.slice(
+        0,
+        4900,
+      ),
     };
   }
 

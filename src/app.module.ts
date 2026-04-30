@@ -19,6 +19,7 @@ import { WeatherModule } from './shared/weather/weather.module';
 import { StickerModule } from './shared/sticker/sticker.module';
 import { GeminiModule } from './shared/gemini/gemini.module';
 import { ImageGenerationModule } from './shared/image-generation/image-generation.module';
+import { MessageModule } from './shared/message/message.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { ImageGenerationModule } from './shared/image-generation/image-generatio
     StickerModule,
     GeminiModule,
     ImageGenerationModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

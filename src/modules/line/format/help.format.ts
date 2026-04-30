@@ -10,6 +10,7 @@ const helpFormat = (): FlexMessage => {
     // ['/image [-furry] [-ref url] {提示詞}', '圖片生成器'],
     ['/image {提示詞}', '圖片生成器'],
     ['/userid', '取得自己的 line userId'],
+    ['/懶人包 [N]', '整理最近 N 則對話 (預設 50, 最大 100)'],
     ['#', '貼圖列表'],
     ['#新增 {name} {url}', '新增貼圖'],
     ['#add {name} {url}', '新增貼圖'],
