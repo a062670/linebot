@@ -3,7 +3,7 @@ import { WebhookEvent } from '@line/bot-sdk';
 import { client } from './config/line.config';
 
 import { GptService } from '@shared/gpt/gpt.service';
-import { GoogleSearchService } from '@shared/google-search/google-search.service';
+import { BraveSearchService } from '@shared/brave-search/brave-search.service';
 import { EarthquakeService } from '@shared/earthquake/earthquake.service';
 import { WeatherService } from '@shared/weather/weather.service';
 import { StickerService } from '@shared/sticker/sticker.service';
@@ -34,7 +34,7 @@ import { helpFormat } from './format/help.format';
 export class LineService {
   constructor(
     private readonly gptService: GptService,
-    private readonly googleSearchService: GoogleSearchService,
+    private readonly braveSearchService: BraveSearchService,
     private readonly earthquakeService: EarthquakeService,
     private readonly weatherService: WeatherService,
     private readonly stickerService: StickerService,
@@ -111,7 +111,7 @@ export class LineService {
       return null;
     }
     const query = content.slice(7).trim();
-    const searchResult = await this.googleSearchService.search(query);
+    const searchResult = await this.braveSearchService.searchWeb(query);
 
     return googleSearchFormat(query, searchResult);
   }
@@ -179,7 +179,7 @@ export class LineService {
     const name = commentList[0];
     let sticker = await this.stickerService.findOne(name);
     if (!sticker) {
-      sticker = await this.stickerService.findFromGoogle(name);
+      sticker = await this.stickerService.findFromImageSearch(name);
     }
     if (!sticker) {
       return stickerFormatText(name, 'No result');

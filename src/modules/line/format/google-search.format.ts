@@ -5,11 +5,11 @@ import {
   sharedFormatFooter,
   sharedFormatNoResult,
 } from './shared.format';
-import { GoogleSearchResult } from '@shared/google-search/google-search.service';
+import { WebSearchResult } from '@shared/brave-search/brave-search.interface';
 
 const googleSearchFormat = (
   keyword: string,
-  searchResult: GoogleSearchResult[],
+  searchResult: WebSearchResult[],
 ): FlexMessage => {
   return {
     type: 'flex',

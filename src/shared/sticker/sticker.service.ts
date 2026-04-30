@@ -6,12 +6,14 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sticker } from './entities/sticker.entity';
 import getImageType from '@libs/getImageType';
+import { BraveSearchService } from '@shared/brave-search/brave-search.service';
 
 @Injectable()
 export class StickerService {
   constructor(
     @InjectRepository(Sticker)
     private readonly stickerRepository: Repository<Sticker>,
+    private readonly braveSearchService: BraveSearchService,
   ) {}
 
   async create(createStickerDto: CreateStickerDto) {
@@ -63,42 +65,29 @@ export class StickerService {
     });
   }
 
-  async findFromGoogle(keyword: string) {
-    const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(keyword)}&cx=${process.env.GOOGLE_SEARCH_ENGINE_ID}&key=${process.env.GOOGLE_SEARCH_API_KEY}&searchType=image&num=10`;
+  async findFromImageSearch(keyword: string) {
+    const results = await this.braveSearchService.searchImage(keyword);
 
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (!data.items || data.items.length === 0) {
-      return null;
-    }
-
-    for (const item of data.items) {
+    for (const { imageUrl } of results) {
       try {
-        const imgUrl = item.link;
+        if (!imageUrl.startsWith('https://')) continue;
 
-        // 檢查 HTTPS
-        if (!imgUrl.startsWith('https://')) continue;
-
-        // 取得圖片 HEAD
-        const headRes = await fetch(imgUrl, { method: 'HEAD' });
+        const headRes = await fetch(imageUrl, { method: 'HEAD' });
         const contentType = headRes.headers.get('content-type') || '';
         const contentLength = parseInt(
           headRes.headers.get('content-length') || '0',
           10,
         );
 
-        // 格式檢查：JPEG 或 PNG
         if (!['image/jpeg', 'image/png'].includes(contentType.toLowerCase()))
           continue;
 
-        // 大小檢查：≤ 1 MB
         if (contentLength > 1024 * 1024) continue;
 
         return {
           id: 0,
           name: keyword,
-          imageUrl: imgUrl,
+          imageUrl,
           animated: true,
           height: 0,
           width: 0,
@@ -106,7 +95,6 @@ export class StickerService {
           updatedAt: new Date(),
         };
       } catch (err) {
-        // 忽略錯誤繼續下一張
         continue;
       }
     }
