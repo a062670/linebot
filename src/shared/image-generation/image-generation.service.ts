@@ -144,7 +144,7 @@ export class ImageGenerationService {
     const prompt = input;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-image-preview',
+      model: 'gemini-3.1-flash-image-preview',
       contents: prompt,
     });
     const folder = `public/image-generation/${Date.now()}`;
