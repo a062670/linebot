@@ -26,8 +26,11 @@ export class BraveSearchService {
     return `${BRAVE_API_BASE}${path}?${qs.toString()}`;
   }
 
-  async searchWeb(keyword: string): Promise<WebSearchResult[]> {
-    const url = this.buildUrl('/web/search', { q: keyword });
+  async searchWeb(keyword: string, count = 10): Promise<WebSearchResult[]> {
+    const url = this.buildUrl('/web/search', {
+      q: keyword,
+      count: String(count),
+    });
     const resp = await fetch(url, { headers: this.headers });
 
     if (!resp.ok) {
@@ -39,11 +42,13 @@ export class BraveSearchService {
 
     const json = await resp.json();
     const results = json?.web?.results ?? [];
-    return results.map((item: any) => ({
-      title: item.title,
-      snippet: item.description,
-      link: item.url,
-    }));
+    return results
+      .filter((item: any) => item?.url && item?.title)
+      .map((item: any) => ({
+        title: item.title,
+        snippet: item.description || ' ',
+        link: item.url,
+      }));
   }
 
   async searchImage(

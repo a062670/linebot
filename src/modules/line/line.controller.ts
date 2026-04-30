@@ -1,9 +1,11 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, Logger } from '@nestjs/common';
 import { LineService } from './line.service';
-import { WebhookRequestBody } from '@line/bot-sdk';
+import { WebhookRequestBody, HTTPFetchError } from '@line/bot-sdk';
 
 @Controller('line')
 export class LineController {
+  private readonly logger = new Logger(LineController.name);
+
   constructor(private readonly lineService: LineService) {}
 
   @Get()
@@ -13,10 +15,19 @@ export class LineController {
 
   @Post('webhook')
   async webhook(@Body() body: WebhookRequestBody) {
-    const result = await Promise.all(
-      body.events.map((event) => this.lineService.handleEvent(event)),
-    );
-    return result;
+    try {
+      const result = await Promise.all(
+        body.events.map((event) => this.lineService.handleEvent(event)),
+      );
+      return result;
+    } catch (err) {
+      if (err instanceof HTTPFetchError) {
+        this.logger.error(
+          `LINE API ${err.status} ${err.statusText}: ${err.body}`,
+        );
+      }
+      throw err;
+    }
   }
 
   @Post('test')
